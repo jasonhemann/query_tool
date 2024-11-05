@@ -1,30 +1,31 @@
-# main.py
-
 import os
 import sys
 
-import openai
+from openai import OpenAI
 
-# Set your OpenAI API key
-openai.api_key = os.getenv("CANVAS_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def send_query(query, document_text):
     """Send the query and document to OpenAI API and return the response."""
     try:
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # or "gpt-4" if you have access
-            prompt=f"Document: {document_text}\n\nQuery: {query}",
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+            messages=[
+                {"role": "system", "content": "Use the provided document for context."},
+                {"role": "user", "content": f"Document: {document_text}"},
+                {"role": "user", "content": f"Query: {query}"},
+            ],
             max_tokens=200,
         )
-        return response.choices[0].text.strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Error communicating with OpenAI API: {e}")
         sys.exit(1)
 
 
 def main():
-    if not openai.api_key:
+    if not client.api_key:  # Change this line to use 'client'
         print(
             "Error: OpenAI API key not set. Set the CANVAS_API_KEY environment variable."
         )
