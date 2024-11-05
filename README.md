@@ -1,105 +1,95 @@
-Here’s a sample `README.md` for your project. This README includes an overview of the project’s purpose, setup instructions, usage, and testing guidelines.
-
-```markdown
 # Query Tool
 
-A Python-based query tool for interacting with the OpenAI API. This tool allows users to send custom queries to the API, along with document text, to receive AI-generated responses. 
+This tool allows you to interact with the OpenAI API to send queries based on the contents of a document and receive responses. The program reads a local document, combines it with a user-defined query, and sends it to the OpenAI API to generate a response.
 
-## Project Structure
+## Prerequisites
 
-The project is organized as follows:
-- `query_tool/`: The main package directory containing the following files:
-  - `main.py`: Contains the primary functionality and can be run directly to send queries.
-  - `__main__.py`: Enables the package to be executed with `python -m query_tool`.
-- `tests/`: Directory for unit tests, which cover the main functionality.
+- **Python 3.13** or higher
+- **OpenAI API key**
 
-## Setup and Installation
+## Installation
 
-This project uses [PDM](https://pdm.fming.dev/) for dependency management and virtual environment handling. Follow these steps to set up the project:
+1. **Install Dependencies**
 
-1. **Install PDM** (if you haven’t already):
+   Since dependencies are defined in [`pyproject.toml`](./pyproject.toml), you can use any compatible tool for installation.
+
+2. **API Key Setup**
+
+   Ensure you have your OpenAI API key stored as an environment variable:
+
    ```bash
-   pip install pdm
-   ```
-
-2. **Install Project Dependencies**:
-   Navigate to the project root directory and install dependencies:
-   ```bash
-   pdm install
-   ```
-
-## Environment Variables
-
-To use this tool, you’ll need to set an environment variable for your OpenAI API key.
-
-1. **Set the OpenAI API Key**:
-   ```bash
-   export CANVAS_API_KEY="your_openai_api_key"
-   ```
-
-Alternatively, you can create a `.env` file with the following line and use a package like `python-dotenv` to load it automatically:
-   ```dotenv
-   CANVAS_API_KEY=your_openai_api_key
+   export OPENAI_API_KEY="your_openai_api_key"
    ```
 
 ## Usage
 
-To send a query using the tool, provide a query string and a path to the document text file. The tool will send the query and the document to OpenAI and print the AI’s response.
+Run the program by specifying the query and the path to the document:
 
-### Running as a Package
-
-Run the tool as a package:
 ```bash
-python -m query_tool "<query>" <document_path>
+python -m query_tool "<your_query>" <path_to_document>
 ```
 
-### Running `main.py` Directly
+For example:
 
-Alternatively, you can run `main.py` directly if needed:
 ```bash
-python query_tool/main.py "<query>" <document_path>
+python -m query_tool "Write a summary" /path/to/document.txt
 ```
 
-## Testing
+## Project Files
 
-The project uses `pytest` for testing, along with `coverage` for test coverage reporting.
+- [`src/query_tool/main.py`](./src/query_tool/main.py): Core program logic for sending queries to the OpenAI API.
+- [`tests/query_tool/test_main.py`](./tests/query_tool/test_main.py): Test cases for `main.py`.
+- [`pyproject.toml`](./pyproject.toml): Project configurations for dependencies, linting, formatting, and testing.
+- [`README.md`](./README.md): This file, providing usage instructions.
 
-### Running Tests
+## Running Tests
 
-To run tests, use the following command:
+This project includes a suite of tests to verify functionality. You can run the tests using any test runner compatible with `pytest`. The commands below assume a typical environment configuration:
+
+1. **Run All Tests**:
+
+   ```bash
+   pytest
+   ```
+
+2. **Run All Tests with Coverage**:
+
+   ```bash
+   pytest --cov=src
+   ```
+
+These commands will run the tests and report coverage based on the configurations specified in `pyproject.toml`. 
+
+For full linting, formatting, and type-checking, refer to the `pre-commit` configuration in the development section below.
+
+## Development
+
+The following commands are optional and primarily for development convenience.
+
+### Environment Configuration
+
+If you’re using `pdm`, you can activate your environment with:
+
 ```bash
-pdm run pytest
+eval $(pdm venv activate .)
 ```
 
-### Checking Coverage
+### Running Tests and Checks with Pre-Commit
 
-To measure test coverage for the project, use:
-```bash
-pdm run pytest --cov=query_tool --cov-report=term-missing
-```
+To run tests, linting, and other checks in a single command (recommended for development), you can use the `pre-commit` setup specified in `pyproject.toml`:
 
-To enforce a minimum coverage threshold (e.g., 100%), run:
-```bash
-pdm run pytest --cov=query_tool --cov-fail-under=100
-```
-
-### Pre-Commit Hooks (Optional)
-
-If you have set up `pre-commit` hooks, they will automatically run `black`, `isort`, `flake8`, and `mypy` on staged files to enforce code quality before each commit.
-
-To manually run the pre-commit hooks, use:
 ```bash
 pdm run pre-commit run --all-files
 ```
 
-If you need to bypass these hooks during a commit, add the `--no-verify` flag:
-```bash
-git commit --no-verify
-```
+This command will:
+- Run `pytest` for testing.
+- Enforce code formatting with `black` and `isort`.
+- Perform linting with `flake8` and type checking with `mypy`.
 
-## License
+> **Note**: If you’re not using `pdm`, consult `pyproject.toml` and `pre-commit` for dependency and configuration details.
 
-This project is licensed under the MIT License.
-```
+## Notes
 
-This `README.md` provides a concise overview, setup instructions, usage examples, and testing guidelines tailored to your PDM-based setup.
+- **API Key**: The program checks for the `OPENAI_API_KEY` environment variable. If it’s not set, the program will exit with an error.
+
