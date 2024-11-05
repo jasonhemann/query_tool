@@ -1,12 +1,16 @@
 import os
 import sys
 
-from openai import OpenAI
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+import openai
 
 
-def send_query(query, document_text):
+def create_client():
+    check_api_key()
+    api_key = os.getenv("OPENAI_API_KEY")
+    return openai.OpenAI(api_key=api_key)
+
+
+def send_query(client, query, document_text):
     """Send the query and document to OpenAI API and return the response."""
     try:
         response = client.chat.completions.create(
@@ -24,30 +28,40 @@ def send_query(query, document_text):
         sys.exit(1)
 
 
-def main():
-    if not client.api_key:  # Change this line to use 'client'
+def check_api_key():
+    if not os.getenv("OPENAI_API_KEY"):
         print(
-            "Error: OpenAI API key not set. Set the CANVAS_API_KEY environment variable."
+            "Error: OpenAI API key not set. Set the OPENAI_API_KEY environment variable."
         )
         sys.exit(1)
 
+
+def validate_args():
     if len(sys.argv) < 3:
         print("Usage: python query_tool/main.py '<query>' <document_path>")
         sys.exit(1)
 
+
+def check_file_exists(filepath):
+    if not os.path.isfile(filepath):
+        print(f"Error: Document file '{filepath}' not found.")
+        sys.exit(1)
+
+
+def main():
+    validate_args()
+    client = create_client()
+
     query = sys.argv[1]
     document_path = sys.argv[2]
 
-    # Read the document file
-    try:
-        with open(document_path, "r") as file:
-            document_text = file.read()
-    except FileNotFoundError:
-        print(f"Error: Document file '{document_path}' not found.")
-        sys.exit(1)
+    check_file_exists(document_path)
+
+    with open(document_path, "r") as file:
+        document_text = file.read()
 
     # Send query and document to OpenAI API
-    result = send_query(query, document_text)
+    result = send_query(client, query, document_text)
     print("LLM Response:", result)
 
 
