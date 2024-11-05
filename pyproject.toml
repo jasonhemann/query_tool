@@ -20,7 +20,7 @@ build-backend = "pdm.backend"
 line-length = 88
 
 [tool.coverage.run]
-source = ["best_practices"]
+source = ["src"]
 
 [tool.coverage.report]
 exclude_lines = [
