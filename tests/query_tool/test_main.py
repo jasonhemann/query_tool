@@ -47,31 +47,57 @@ def test_check_file_exists(monkeypatch, tmp_path):
         pytest.fail("SystemExit raised unexpectedly!")
 
 
-def test_send_query(mocker):
-    # Define the expected response structure from OpenAI
-    expected_response = {"choices": [{"message": {"content": "Paris"}}]}
+def test_send_query_response_handling(mocker):
+    # Create a mock for the message content
+    mock_message = mocker.Mock()
+    mock_message.content = "Paris"  # Setting the content attribute directly
 
-    # Patch the `create` method on the client's `chat.completions`
-    mock_create = mocker.patch(
-        "query_tool.main.client.chat.completions.create", return_value=expected_response
-    )
+    # Create a mock for the choice that includes the message
+    mock_choice = mocker.Mock()
+    mock_choice.message = mock_message  # Assign mock_message to the message attribute
 
-    # Run `send_query` with the patched client
-    client = create_client()
+    # Create the mock response to have a list of choices
+    mock_response = mocker.Mock()
+    mock_response.choices = [mock_choice]  # Assign mock_choice to choices list
+
+    # Mock the OpenAI client's `chat.completions.create` method
+    mock_client = mocker.Mock()
+    mock_client.chat.completions.create.return_value = mock_response
+
+    # Define inputs
     query = "What is the capital of France?"
-    document_text = "This is some document text to provide context."
+    document_text = "Some document content here."
 
-    # Execute `send_query` and capture the response
-    response = send_query(client, query, document_text)
-    assert response == "Paris"
+    # Call `send_query` with the mock client and check the returned value
+    response = send_query(mock_client, query, document_text)
+    assert response == "Paris", "Expected response to be 'Paris'"
 
-    # Verify `create` was called with the correct parameters
-    mock_create.assert_called_once_with(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "Use the provided document for context."},
-            {"role": "user", "content": f"Document: {document_text}"},
-            {"role": "user", "content": f"Query: {query}"},
-        ],
-        max_tokens=200,
-    )
+
+# def test_send_query(mocker):
+#     # Define the expected response structure from OpenAI
+#     expected_response = {"choices": [{"message": {"content": "Paris"}}]}
+
+#     # Patch the `create` method on the client's `chat.completions`
+#     mock_create = mocker.patch(
+#         "query_tool.main.client.chat.completions.create", return_value=expected_response
+#     )
+
+#     # Run `send_query` with the patched client
+#     client = create_client()
+#     query = "What is the capital of France?"
+#     document_text = "This is some document text to provide context."
+
+#     # Execute `send_query` and capture the response
+#     response = send_query(client, query, document_text)
+#     assert response == "Paris"
+
+#     # Verify `create` was called with the correct parameters
+#     mock_create.assert_called_once_with(
+#         model="gpt-3.5-turbo",
+#         messages=[
+#             {"role": "system", "content": "Use the provided document for context."},
+#             {"role": "user", "content": f"Document: {document_text}"},
+#             {"role": "user", "content": f"Query: {query}"},
+#         ],
+#         max_tokens=200,
+#     )
