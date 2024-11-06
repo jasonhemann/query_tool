@@ -71,7 +71,7 @@ The following commands are optional and primarily for development convenience.
 If you’re using `pdm`, you can activate your environment with:
 
 ```bash
-eval $(pdm venv activate .)
+eval $(pdm venv activate in-project)
 ```
 
 ### Running Tests and Checks with Pre-Commit
