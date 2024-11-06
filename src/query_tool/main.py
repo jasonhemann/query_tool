@@ -62,7 +62,7 @@ def main():
 
     # Send query and document to OpenAI API
     result = send_query(client, query, document_text)
-    print("LLM Response:", result)
+    print(result)
 
 
 if __name__ == "__main__":
