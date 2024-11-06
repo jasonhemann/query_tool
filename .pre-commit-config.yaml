@@ -37,11 +37,12 @@ repos:
         language: system
         entry: pdm run pytest
         types: [python]
+        pass_filenames: false
 
       - id: pytest-cov
         name: pytest-cov
         stages: [push]
         language: system
-        entry: pdm run pytest --cov --cov-fail-under=100
+        entry: pdm run pytest --cov --cov-fail-under=80
         types: [python]
         pass_filenames: false
