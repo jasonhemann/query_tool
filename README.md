@@ -73,6 +73,22 @@ If you’re using `pdm`, you can activate your environment with:
 ```bash
 eval $(pdm venv activate in-project)
 ```
+and deactivate with
+
+```bash
+deactivate
+```
+
+### Building 
+
+To build this project as a single stand-alone onefile executable python script, use
+
+```bash
+pyinstaller --onefile --name query_tool src/query_tool/__main__.py 
+```
+
+and the executable will be built in `dist`. 
+
 
 ### Running Tests and Checks with Pre-Commit
 
