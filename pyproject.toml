@@ -14,8 +14,14 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.black]
 line-length = 88
@@ -48,13 +54,10 @@ use_parentheses = true
 line_length = 88  # Match black's line length
 
 [tool.mypy]
-files = ["src","tests"]
+files = ["src", "tests"]
 ignore_missing_imports = true
 
-[tool.pdm]
-distribution = true
-
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
     "black>=24.10.0",
     "isort>=5.13.2",
@@ -66,5 +69,5 @@ dev = [
     "pytest-mock>=3.14.0",
 ]
 
-[tool.pytest]
+[tool.pytest.ini_options]
 testpaths = ["tests"]

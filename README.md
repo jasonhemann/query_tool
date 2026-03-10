@@ -49,13 +49,13 @@ This project includes a suite of tests to verify functionality. You can run the 
 1. **Run All Tests**:
 
    ```bash
-   pytest
+   uv run pytest
    ```
 
 2. **Run All Tests with Coverage**:
 
    ```bash
-   pytest --cov=src
+   uv run pytest --cov=src
    ```
 
 These commands will run the tests and report coverage based on the configurations specified in `pyproject.toml`. 
@@ -68,10 +68,11 @@ The following commands are optional and primarily for development convenience.
 
 ### Environment Configuration
 
-If you’re using `pdm`, you can activate your environment with:
+If you’re using `uv`, you can activate your environment with:
 
 ```bash
-eval $(pdm venv activate in-project)
+uv sync --group dev
+source .venv/bin/activate
 ```
 and deactivate with
 
@@ -95,7 +96,7 @@ and the executable will be built in `dist`.
 To run tests, linting, and other checks in a single command (recommended for development), you can use the `pre-commit` setup specified in `pyproject.toml`:
 
 ```bash
-pdm run pre-commit run --all-files
+uv run pre-commit run --all-files
 ```
 
 This command will:
@@ -103,7 +104,7 @@ This command will:
 - Enforce code formatting with `black` and `isort`.
 - Perform linting with `flake8` and type checking with `mypy`.
 
-> **Note**: If you’re not using `pdm`, consult `pyproject.toml` and `pre-commit` for dependency and configuration details.
+> **Note**: If you’re not using `uv`, consult `pyproject.toml` and `pre-commit` for dependency and configuration details.
 
 ## Notes
 
