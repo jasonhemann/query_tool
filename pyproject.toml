@@ -1,17 +1,18 @@
 [project]
 name = "query_tool"
 version = "0.1.0"
-description = "Testing querying openai for 2123 demo"
-authors = [
-    {name = "Jason Hemann", email = "jason.hemann@gmail.com"},
-]
+description = "Testing querying OpenAI for 2123 demo"
+authors = [{ name = "Jason Hemann", email = "jason.hemann@gmail.com" }]
 dependencies = [
     "openai>=1.54.1",
     "pyinstaller>=6.11.1",
 ]
 requires-python = ">=3.13"
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "MIT" }
+
+[project.scripts]
+query-tool = "query_tool.main:main"
 
 [build-system]
 requires = ["setuptools>=68", "wheel"]
@@ -23,51 +24,65 @@ package-dir = { "" = "src" }
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.black]
-line-length = 88
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-q --cov=src/query_tool --cov-report=term-missing"
 
 [tool.coverage.run]
-source = ["src"]
+source = ["src/query_tool"]
 
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
-    "def __repr__",
-    "if self.debug",
-    "raise AssertionError",
+    "if __name__ == '__main__':",
     "raise NotImplementedError",
-    "if 0:",
-    "if __name__ == '__main__':"
 ]
 
-[tool.flake8]
-ignore = ["E203", "E266", "E501", "W503"]
-max-line-length = 88
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "C90", "SIM", "RET", "N", "Q", "RUF", "PT", "D"]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D107",
+    "D203",
+    "D205",
+    "D213",
+    "E203",
+    "E266",
+    "E501",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+
+[tool.ruff.lint.mccabe]
 max-complexity = 18
-exclude = ["tests/", "migrations/"]
 
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 88  # Match black's line length
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
 
-[tool.mypy]
-files = ["src", "tests"]
-ignore_missing_imports = true
+[tool.basedpyright]
+include = ["src"]
+typeCheckingMode = "recommended"
+reportMissingTypeStubs = "none"
+venvPath = "."
+venv = ".venv"
 
 [dependency-groups]
 dev = [
-    "black>=24.10.0",
-    "isort>=5.13.2",
-    "flake8>=7.1.1",
-    "flake8-pyproject>=1.2.3",
-    "mypy>=1.13.0",
-    "pytest>=8.3.3",
-    "pytest-cov>=6.0.0",
-    "pytest-mock>=3.14.0",
+    "basedpyright>=1.31.3",
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.14.1",
+    "ruff>=0.13.1",
 ]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
