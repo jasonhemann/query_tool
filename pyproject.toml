@@ -15,7 +15,7 @@ license = { text = "MIT" }
 query-tool = "query_tool.main:main"
 
 [build-system]
-requires = ["setuptools>=83", "wheel"]
+requires = ["setuptools>=84.1.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -85,4 +85,11 @@ dev = [
     "pytest-cov>=7.0.0",
     "pytest-mock>=3.14.1",
     "ruff>=0.13.1",
+]
+
+[tool.uv]
+constraint-dependencies = [
+    "certifi>=2026.10.18",
+    "filelock>=4.2.1",
+    "setuptools>=84.1.0",
 ]
